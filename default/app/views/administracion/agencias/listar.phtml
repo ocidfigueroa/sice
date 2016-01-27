@@ -1,0 +1,69 @@
+<?php View::flash(); ?>
+
+<script type="text/javascript">
+    $(function() {
+        $('table').kgrid({
+			form_to: 	$.KumbiaPHP.publicPath+'agencias/index/buscar/',
+            order_to:   $.KumbiaPHP.publicPath+"agencias/index/listar/",
+            order_attr: '<?php echo (APP_AJAX) ? 'class="js-link js-spinner"' : ''; ?>'
+        });
+    });
+</script>
+
+<div class="container shell-view">
+    
+    <?php View::process($page_module, $page_title, $set_title); ?>
+    
+    <div class="btn-toolbar btn-toolbar-top">
+        <div class="row">            
+            <div class="btn-actions">
+                <?php echo DwHtml::button("agencias/index/agregar/", 'agregar agencia', NULL, 'fa-check-square-o', APP_AJAX); ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-overflow">
+    
+        <table class="table table-bordered table-hover table-striped table-condensed table-responsive">
+            <thead>
+                <tr>
+                    <th data-order="id">ID</th>
+                    <th data-search="nombre" data-order="nombre">NOMBRE</th>
+                    <th data-search="direccion" data-order="direccion">DIRECCION</th>
+                    <th data-order="activo">ESTADO</th>
+                    <th class="btn-actions col-blocked text-center">ACCIONES</th>
+                </tr>
+            </thead>
+            
+           	<tbody>
+
+                <?php foreach($agencias->items as $agencia): ?>
+                	<?php $key_upd = Security::setKey($agencia->id, 'upd_agencia'); ?>
+                    <?php $key_ina = Security::setKey($agencia->id, 'inactivar_agencia'); ?>
+                    <?php $key_rea = Security::setKey($agencia->id, 'reactivar_agencia'); ?>
+                    <?php $key_del = Security::setKey($agencia->id, 'eliminar_agencia'); ?> 
+                    <tr>
+                        <td><?php echo $agencia->id; ?></td>
+                        <td><?php echo $agencia->nombre; ?></td>
+                        <td><?php echo $agencia->direccion; ?></td>
+                        <td><?php echo ($agencia->activo == Agencias::ACTIVO) ? '<span class="label label-success">Activa</span>' : '<span class="label label-danger">Bloqueada</span>'; ; ?></td>
+                        <td>
+                                <?php echo DwHtml::buttonTable('Modificar agencia', "agencias/index/editar/$key_upd/", null, 'warning', 'fa-edit'); ?>
+                                <?php if($agencia->activo == Agencias::ACTIVO) { ?>
+                                    <?php echo DwHtml::buttonTable('Bloquear agencia', "agencias/index/estado/inactivar/$key_ina/", null, 'success', 'fa-flag'); ?>
+                                <?php } else { ?>
+                                    <?php echo DwHtml::buttonTable('Reactivar agencia', "agencias/index/estado/reactivar/$key_rea/", null, 'danger', 'fa-flag'); ?>
+                                <?php } ?>
+                                <?php echo DwHtml::buttonTable('Eliminar agencia', "agencias/index/eliminar/$key_del/", array('class'=>'js-confirm', 'confirm-title'=>'Eliminar agencia', 'confirm-body'=>'Está seguro de eliminar esta agencia? <br />Recuerda que esta operación no se puede reversar.'), 'danger', 'fa-ban'); ?>
+                            </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        
+        <?php View::partial('paginators/default', false, array('page'=>$agencias, 'url'=>"agencias/index/listar/$order/")); ?>
+        
+    </div>
+  
+    
+</div>

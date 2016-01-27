@@ -1,0 +1,68 @@
+<?php View::flash(); ?>
+
+<script type="text/javascript">
+    $(function() {
+        $('table').kgrid({            
+            form_data       : ['<?php echo $field; ?>', '<?php echo $value; ?>'],
+            form_to         : $.KumbiaPHP.publicPath+'agencias/index/buscar/',            
+            order_attr      : '<?php echo (APP_AJAX) ? 'class="js-link js-spinner"' : ''; ?>',
+            order_to        : $.KumbiaPHP.publicPath+'agencias/index/buscar/<?php echo $field; ?>/<?php echo $value; ?>'
+        });
+    });
+</script>
+
+<div class="container shell-view">
+
+    <?php View::process($page_module, $page_title, $set_title); ?>
+
+    <div class="btn-toolbar btn-toolbar-top">
+        <div class="row">
+            <div class="btn-actions">
+                <?php echo DwHtml::button("agencias/index/agregar/", 'agregar', NULL, 'fa-check-square-o', APP_AJAX); ?>
+                <?php echo DwHtml::button("agencias/index/listar/", 'listar', NULL, 'fa-check', APP_AJAX); ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-overflow">
+
+        <table class="table table-bordered table-hover table-striped table-condensed table-responsive">
+            <thead>
+                <tr>
+                    <th data-order="id">ID</th>
+                    <th data-search="nombre" data-order="nombre">NOMBRE</th>
+                    <th data-search="direccion" data-order="direccion">DIRECCION</th>
+                    <th data-order="activo">ESTADO</th>
+                    <th class="btn-actions col-blocked text-center">ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($agencias->items as $agencia): ?>                    
+                    <?php $key_shw = Security::setKey($agencia->id, 'shw_agencia'); ?>
+                    <?php $key_ina = Security::setKey($agencia->id, 'bloquear_agencia'); ?>
+                    <?php $key_rea = Security::setKey($agencia->id, 'reactivar_agencia'); ?>                
+                    <tr>
+                        <td><?php echo ($field=='id') ? DwUtils::resaltar($value, $agencia->id) : $agencia->id; ?></td>
+                        <td><?php echo ($field=='nombre') ? DwUtils::resaltar($value, $agencia->nombre) : $agencia->nombre; ?></td>
+                        <td><?php echo ($field=='direccion') ? DwUtils::resaltar($value, $agencia->direccion) : $agencia->direccion; ?></td>
+                        <td><?php echo ($agencia->activo == Agencias::ACTIVO) ? '<span class="label label-success" title="'.$agencia->nombre.'" rel="tooltip">Activa</span>' : '<span class="label label-danger" title="'.$agencia->nombre.'" rel="tooltip">Bloqueada</span>'; ; ?></td>
+                        <td>
+                            <?php #echo DwHtml::buttonTable('Ver usuario', "sistema/usuarios/ver/$key_shw/", NULL, 'info', 'fa-search'); ?>
+                            <?php #if($usuario->estado_usuario == EstadoUsuario::ACTIVO) { ?>
+                                <?php #echo DwHtml::buttonTable('Bloquear usuario', "sistema/usuarios/estado/bloquear/$key_ina/", NULL, 'success', 'fa-flag'); ?>
+                            <?php #} else { ?>
+                                <?php #echo DwHtml::buttonTable('Reactivar usuario', "sistema/usuarios/estado/reactivar/$key_rea/", NULL, 'danger', 'fa-flag'); ?>
+                            <?php #} ?>
+                            -- agregar acciones --
+                        </td>
+                    </tr>
+                    
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+    </div>
+
+    <?php View::partial('paginators/default', false, array('page'=>$agencias, 'url'=>"agencias/index/buscar/$field/$value/$order/")); ?>
+
+</div>

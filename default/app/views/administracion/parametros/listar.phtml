@@ -1,0 +1,72 @@
+<?php View::flash(); ?>
+
+<script type="text/javascript">
+    $(function() {
+        $('table').kgrid({
+            order_to:   $.KumbiaPHP.publicPath+"dashboard/parametros/listar/",
+            order_attr: '<?php echo (APP_AJAX) ? 'class="js-link js-spinner"' : ''; ?>'
+        });
+    });
+</script>
+
+<div class="container shell-view">
+
+    <?php View::process($page_module, $page_title, $set_title); ?>
+
+    <div class="btn-toolbar btn-toolbar-top">
+        <div class="row">
+            <div class="btn-actions">
+                <?php echo DwHtml::button("dashboard/parametros/agregar/", 'agregar', NULL, 'fa-check-square-o', APP_AJAX); ?>
+            </div>            
+        </div>
+    </div>
+
+    <div class="container-overflow">
+
+        <table class="table table-bordered table-hover table-striped table-condensed table-responsive">
+            <thead>
+                <tr>
+                    <th>NUM</th>
+                    <th data-order="codigo">CODIGO</th>
+                    <th data-order="codigo_hijo">CODIGO HIJO</th>
+                    <th data-order="valor">VALOR</th>
+                    <th data-order="descripcion">DESCRIPCION</th>
+                    
+                    <th data-order="estado">ESTADO</th>
+                    <th class="btn-actions col-blocked text-center">ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($parametroses->items as $parametros): ?>
+                    <?php $key_show = Security::setKey($parametros->id, 'show_parametros'); ?>
+                    <?php $key_upd = Security::setKey($parametros->id, 'upd_parametros'); ?>
+                    <?php $key_inac = Security::setKey($parametros->id, 'inactivar_parametros'); ?>
+                    <?php $key_reac = Security::setKey($parametros->id, 'reactivar_parametros'); ?>
+                    <tr>
+                        <td><?php echo $parametroses->counter; ?></td>
+                        <td><?php echo $parametros->codigo; ?></td>
+                        <td><?php echo $parametros->codigo_hijo; ?></td>
+                        <td><?php echo $parametros->valor; ?></td>
+                        <td><?php echo $parametros->descripcion; ?></td>
+                        
+                        <td><?php echo ($parametros->estado == Parametros::ACTIVO) ? '<span class="label label-success">Activo</span>' : '<span class="label label-danger">Bloqueado</span>';?></td>
+                        <td class="btn-actions">
+                            <?php echo DwHtml::buttonTable('Ver parámetro', "dashboard/parametros/ver/$key_show/", null, 'info', 'fa-search'); ?>
+                            <?php echo DwHtml::buttonTable('Modificar parametros', "dashboard/parametros/editar/$key_upd/", null, 'warning', 'fa-edit'); ?>
+                            <?php if($parametros->estado == Parametros::ACTIVO) { ?>
+                                <?php echo DwHtml::buttonTable('Inactivar parámetro', "dashboard/parametros/estado/inactivar/$key_inac/", null, 'success', 'fa-flag'); ?>
+                            <?php } else { ?>
+                                <?php echo DwHtml::buttonTable('Reactivar parámetro', "dashboard/parametros/estado/reactivar/$key_reac/", null, 'danger', 'fa-flag'); ?>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                    <?php $parametroses->counter++; ?>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+    </div>
+
+    <?php View::partial('paginators/default', false, array('page'=>$parametroses, 'url'=>"dashboard/parametros/listar/$order/")); ?>
+
+</div>
