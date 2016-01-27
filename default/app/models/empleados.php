@@ -7,7 +7,6 @@
  * @package     Models 
  */
 
-Load::models('parametros', 'sistema/acceso');
 
 class Empleados extends ActiveRecord {
     

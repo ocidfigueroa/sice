@@ -1,0 +1,48 @@
+<?php View::flash(); ?>
+
+<script type="text/javascript">
+    $(function() {
+        $('table').kgrid({
+            order_to: $.KumbiaPHP.publicPath+"dashboard/parametros/ver/<?php echo $key; ?>/",
+            order_attr: '<?php echo (APP_AJAX) ? 'class="js-link js-spinner"' : ''; ?>'
+        });
+    });
+</script>
+
+<div class="container shell-view">
+        
+    <?php View::process($page_module, $page_title, $set_title); ?>
+    
+    <div class="tab-content">
+        
+        <div class="tab-pane active" id="tab1">
+
+
+            <?php echo DwForm::open(); ?>
+                <div class="row">
+                    <div class="col-md-6">
+                        <?php echo DwForm::text('parametros.codigo', NULL, $parametros->codigo, 'Código'); ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?php echo DwForm::text('parametros.codigo_hijo', NULL, $parametros->codigo_hijo, 'Código Hijo'); ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?php echo DwForm::text('parametros.parametros', NULL, ($parametros->estado == Perfil::ACTIVO) ? 'ACTIVO' : 'BLOQUEADO', 'Estado'); ?>
+                    </div>
+                </div>
+            
+                <div class="row">
+                    <div class="form-actions">
+                        <div class="pull-left">
+                            <?php echo DwButton::back(); ?>                           
+                        </div>
+                        <?php echo DwForm::nextTab(); ?>
+                    </div>
+                </div>
+            
+            <?php echo DwForm::close(); ?>
+
+        </div>
+    </div>
+   
+</div>

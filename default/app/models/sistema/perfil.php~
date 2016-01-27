@@ -150,7 +150,7 @@ class Perfil extends ActiveRecord {
 
 
     /**
-     * Método para obtener los recursos de un perfil
+     * Método para obtener los ecursos de un perfil
      * @param type $perfil
      * @return type
      */
