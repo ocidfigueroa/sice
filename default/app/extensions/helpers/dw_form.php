@@ -6,7 +6,6 @@
  * @category    Views
  * @package     Helpers
  */
-
 class DwForm extends Form {
     
      /**
@@ -38,7 +37,6 @@ class DwForm extends Form {
      * @var boolean
      */
     protected static $_show_label = false;
-
     /**
      * Variable que indica si muestra el help block
      * @var boolean
@@ -74,7 +72,6 @@ class DwForm extends Form {
                 //Asigno que pertenece a la clase de validación y si utiliza ajax
                 $attrs['class'] = ($formAjax) ? 'js-validate js-remote' : 'js-validate';
             }
-
             if($formAjax && !isset($attrs['data-to'])) { //Si es un form con ajax verifico si está definido el data-to
                 $attrs['data-to'] = 'shell-content';
             }
@@ -92,7 +89,6 @@ class DwForm extends Form {
             //asigno el estilo al formulario
             $attrs['class']         = $attrs['class'].' '.self::$_style;
             self::$_form++;
-
         } else {
             if(isset($attrs['class'])) {
                 //Verifico si está la clase form-control
@@ -432,28 +428,24 @@ class DwForm extends Form {
      * @return string
      */
     public static function dbSelect($field, $show=null, $data=null, $blank='Selección', $attrs=null, $value=null, $label='', $help='') {
-
         $attrs = self::_getAttrsClass($attrs, 'select');
         if(empty($data)) {
             $data = array(''=>'Selección');
         }
-
         if(empty($blank)) {
             $blank = 'Selección';
         }
-
         $attrs2 = $attrs;
-
         $input = self::getControls();
-
         if(is_array($attrs)) { //Cargo los atributos
             $attrs = Tag::getAttrs($attrs);
         }
-        
-        list($id, $name, $value) = self::getFieldData($field, $value);
-
+        $resultado  = self::getFieldData($field, $value);         
+        //list($id, $name, $value) = self::getFieldData($field, $value);
+        $id = $resultado['id'];
+        $name = $resultado['name']; 
+        $value = $resultado['value'];
         $options = '';
-
         //Muestro el blank
         if(!empty($blank) && $blank != 'none') {
             if(is_array($blank)) {
@@ -536,7 +528,6 @@ class DwForm extends Form {
         //Verifico si tiene un label
         $label = ($label && self::$_show_label) ? self::label($label, $field, null, $attrs2['class'])  : '';
         return '<div class="form-group">'.$label.$input.'</div>'.PHP_EOL;
-
     }
     
     
@@ -600,7 +591,6 @@ class DwForm extends Form {
         if(!self::$_help_block) {
             return $input.PHP_EOL;
         }
-
         //Verifico si tiene un label
         $label = ($label && self::$_show_label) ? self::label($label, $field, null, $attrs['class'])  : '';
         return '<div class="form-group">'.$label.$input.'</div>'.PHP_EOL;
@@ -635,7 +625,6 @@ class DwForm extends Form {
     public static function email($field, $attrs=null, $value=null, $label='', $help='') {
         return self::text($field, $attrs, $value, $label, $help, 'email');
     }
-
     /**
      * Método que genera un input type="url"
      * @param type $field Nombre del input
@@ -736,7 +725,6 @@ class DwForm extends Form {
         $i = false;
         return "<fieldset $attrs><legend>$text</legend>";
     }
-
     /**
      * Método para crear un legend
      * @param type $text
@@ -812,7 +800,6 @@ class DwForm extends Form {
         if(strpos($name, '[]') !== false)  {                        
             $id = str_replace(array('[', ']'), '_', $id);            
         } 
-
         if ($checked) {
             $checked = 'checked="checked"';
         }
@@ -921,7 +908,6 @@ class DwForm extends Form {
         Session::set('rsa32_key',$key);
         return self::hidden('rsa32_key', NULL, $key);
     }
-
     /**
      * Devuelve el resultado del token almacenado en sesion con la enviada en el form
      * @return boolean

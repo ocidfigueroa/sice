@@ -8,11 +8,17 @@
 
         <div class="row">
             <div class="col-md-6">
-                <?php echo DwForm::text('parametros.codigo', array('class'=>'input-numeric mask-pint show-error'), $perfil->codigo, 'Código'); ?>
+                <?php echo DwForm::text('parametros.codigo', array('class'=>'input-numeric input-required mask-pint show-error'), $parametros->codigo, 'Código'); ?>
             </div>
             <div class="col-md-6">
-                <?php echo DwForm::text('parametros.codigo_hijo', array('class'=>'input-numeric mask-pint show-error'), $perfil->codigo_hijo, 'Código Hijo'); ?>
+                <?php echo DwForm::text('parametros.codigo_hijo', array('class'=>'input-numeric input-required mask-pint show-error'), $parametros->codigo_hijo, 'Código Hijo'); ?>
+            </div>
+            <div class="col-md-6">
+                <?php echo DwForm::text('parametros.valor', array('class'=>'input-numeric mask-pint show-error'), $parametros->valor, 'Valor'); ?>
             </div>            
+            <div class="col-md-6">
+                <?php echo DwForm::text('parametros.descripcion', array('class'=>'input-required mask-alpha show-error'), $parametros->descripcion, 'Descripción'); ?>
+            </div>
         </div>
     
         <div class="row">

@@ -5,6 +5,7 @@
  * @category    
  * @package     Controllers  
  */
+ 
 Load::model('parametros');
 
 class ParametrosController extends BackendController {
@@ -29,8 +30,8 @@ class ParametrosController extends BackendController {
      */
     public function listar($order='order.id.asc', $page='page.1') { 
         $page = (Filter::get($page, 'page') > 0) ? Filter::get($page, 'page') : 1;
-        $parametros = new Parametros();
-        $this->parametros = $parametros->getListadoParametros('todos', $order, $page);        
+        $parametroses = new Parametros();
+        $this->parametroses = $parametroses->getListadoParametros('todos', $order, $page);        
         $this->order = $order;        
         $this->page_title = 'Listado de Parámetros del Sistema';
     }
@@ -40,7 +41,7 @@ class ParametrosController extends BackendController {
      */
     public function agregar() {
         if(Input::hasPost('parametros')) {
-            if(parametros::setParametros('create', Input::post('parametros'), array('estado'=>Parametros::ACTIVO))){
+            if(Parametros::setParametros('create', Input::post('parametros'), array('estado'=>Parametros::ACTIVO))){
                 Flash::valid('El parámetro se ha registrado correctamente!');
                 return Redirect::toAction('listar');
             }          
@@ -57,13 +58,14 @@ class ParametrosController extends BackendController {
         }        
         
         $parametros = new Parametros();
+        
         if(!$parametros->find_first($id)) {
             Flash::error('Lo sentimos, no se pudo establecer la información del parámetro');
             return Redirect::toAction('listar');
         }
         
         if(Input::hasPost('parametros')) {                                     
-            if(parametros::setParametros('update', Input::post('parametros'), array('id'=>$id))){
+            if(Parametros::setParametros('update', Input::post('parametros'), array('id'=>$id))){
                 Flash::valid('El parámetro se ha actualizado correctamente!');
                 return Redirect::toAction('listar');
             }            
@@ -85,6 +87,17 @@ class ParametrosController extends BackendController {
         $parametros = new Parametros();
         if(!$parametros->find_first($id)) {
             Flash::error('Lo sentimos, no se pudo establecer la información del parámetro');            
+        } else {
+            if($tipo=='inactivar' && $parametros->estado == Perfil::INACTIVO) {
+                Flash::info('El parámetro ya se encuentra inactivo');
+            } else if($tipo=='reactivar' && $parametros->estado == Parametros::ACTIVO) {
+                Flash::info('El parámetro ya se encuentra activo');
+            } else {
+                $estado = ($tipo=='inactivar') ? Parametros::INACTIVO : Parametros::ACTIVO;
+                if(Parametros::setParametros('update', $parametros->to_array(), array('id'=>$id, 'estado'=>$estado))){
+                    ($estado==Parametros::ACTIVO) ? Flash::valid('El parámetro se ha reactivado correctamente!') : Flash::valid('El parámetro se ha bloqueado correctamente!');
+                }
+            }                
         } 
         
         return Redirect::toAction('listar');
@@ -93,27 +106,24 @@ class ParametrosController extends BackendController {
     /**
      * Método para ver
      */
-    public function ver($key, $order='order.id.asc', $page='page.1') { 
-        $page = (Filter::get($page, 'page') > 0) ? Filter::get($page, 'page') : 1;     
+    public function ver($key, $order='order.codigo.asc', $page='page.1') { 
+        $page = (Filter::get($page, 'page') > 0) ? Filter::get($page, 'page') : 1;  
+           
         if(!$id = Security::getKey($key, 'show_parametros', 'int')) {
             return Redirect::toAction('listar');
         }        
         
         $parametros = new Parametros();
+        
         if(!$parametros->find_first($id)) {
             Flash::error('Lo sentimos, no se pudo establecer la información del parámetro');
             return Redirect::toAction('listar');
         }        
         
-        /**
-        * $usuario = new Usuario();
-        * $this->usuarios = $usuario->getUsuarioPorparametros($parametros->id, $order, $page);
-        
-        * $this->parametros = $parametros;
-        * $this->order = $order;        
-        * $this->page_title = 'Información del parámetros';
-        * $this->key = $key;
-        */        
+        $this->parametros = $parametros;
+        $this->order = $order;        
+        $this->page_title = 'Información del Parámetro';
+        $this->key = $key;
     }
     
 }

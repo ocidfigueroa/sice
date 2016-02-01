@@ -44,7 +44,17 @@ class Parametros extends ActiveRecord {
      */
     public function getListadoParametros($estado='todos', $order='', $page=0) {                   
         $columns = 'parametros.*';        
-        $conditions = '';        
+        
+		  if($estado=='acl') {
+            $conditions = " AND parametros.estado = ".self::ACTIVO;
+        } else {
+        	   $conditions = "1 = 1";
+        	   
+            if($estado!='todos') {
+                $conditions = ($estado==self::ACTIVO) ? " AND estado=".self::ACTIVO : " AND estado=".self::INACTIVO;                
+            }
+        }                
+                
         $order = $this->get_order($order, array(            
             'codigo' => array(
                 'ASC' => 'parametros.codigo ASC, parametros.codigo_hijo ASC',
@@ -53,10 +63,15 @@ class Parametros extends ActiveRecord {
             'codigo_hijo' => array(
                 'ASC' => 'parametros.codigo_hijo ASC, parametros.codigo ASC',
                 'DESC' => 'parametros.codigo_hijo DESC, parametros.codigo DESC'
+            ),
+            'Descripcion' => array(
+                'ASC' => 'parametros.descripcion ASC',
+                'DESC' => 'parametros.descripcion DESC'
             )
+             
         ));
         
-        $group = '';
+        // $group = '';
         
         if($page) {            
             // return $this->paginated("columns: $columns", "join: $join", "conditions: $conditions", "group: $group", "order: $order", "page: $page");
@@ -64,6 +79,13 @@ class Parametros extends ActiveRecord {
         }
         
         return $this->find("columns: $columns", "conditions: $conditions", "order: $order");
+    }
+    
+    public function getListadoCombo($codigo=0){
+      $columns = 'codigo_hijo, descripcion';
+      $conditions = 'codigo_hijo > 0 and codigo = '.$codigo;
+      return $this->find("columns: $columns", "conditions: $conditions");
+          
     }
     
     /**
@@ -80,7 +102,8 @@ class Parametros extends ActiveRecord {
         $obj = new Parametros($data); //Se carga los datos con los de las tablas        
         if($optData) { //Se carga información adicional al objeto
             $obj->dump_result_self($optData);
-        }             
+        }
+                     
         //Verifico que no exista otro parametros, y si se encuentra inactivo lo active
         // $conditions = empty($obj->id) ? "parametros = '$obj->parametros'" : "parametros = '$obj->parametros' AND id != '$obj->id'";
         // $old = new parametros();

@@ -36,16 +36,16 @@
                     <?php echo DwForm::email('usuario.email', array('class'=>'input-required input-email mask-email'), NULL, 'Email'); ?>
                 </div>
                 <div class="col-md-6">
-                    <?php echo DwForm::dbSelect('empleados.cargo_parametros_id', 'descripcion', array('parametros','getListadoCargos'), NULL, array('class'=>'input-required'), NULL, 'Cargo'); ?>
+                    <?php echo DwForm::dbSelect('empleados.cargo_parametros_id', 'descripcion', array('parametros','getListadoCombo',2), NULL, array('class'=>'input-required'), NULL, 'Cargo'); ?>
                 </div>
             </div>
             
             <div class="row">
                 <div class="col-md-6">                    
-                    <?php echo DwForm::dbSelect('empleados.agencias_id', 'agencias', array('parametros', 'getListadoCargos'), NULL, array('class'=>'input-required'), NULL, 'Agencia'); ?>
+                    <?php echo DwForm::dbSelect('empleados.agencias_id', 'descripcion', array('parametros', 'getListadoCombo',2), NULL, array('class'=>'input-required'), NULL, 'Agencia'); ?>
                 </div>
                 <div class="col-md-6">
-                    <?php echo DwForm::dbSelect('empleados.ccostos_id', 'ccostos', array('parametros', 'getListadoCargos'), NULL, array('class'=>'input-required'), NULL, 'Centro Costos'); ?>
+                    <?php echo DwForm::dbSelect('empleados.ccostos_id', 'descripcion', array('parametros', 'getListadoCombo',2), NULL, array('class'=>'input-required'), NULL, 'Centro Costos'); ?>
                 </div>
             </div>
             
