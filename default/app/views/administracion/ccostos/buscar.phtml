@@ -1,0 +1,69 @@
+<?php View::flash(); ?>
+
+<script type="text/javascript">
+    $(function() {
+        $('table').kgrid({            
+            form_data       : ['<?php echo $field; ?>', '<?php echo $value; ?>'],
+            form_to         : $.KumbiaPHP.publicPath+'administracion/ccostos/buscar/',            
+            order_attr      : '<?php echo (APP_AJAX) ? 'class="js-link js-spinner"' : ''; ?>',
+            order_to        : $.KumbiaPHP.publicPath+'administracion/ccostos/buscar/<?php echo $field; ?>/<?php echo $value; ?>'
+        });
+    });
+</script>
+
+<div class="container shell-view">
+
+    <?php View::process($page_module, $page_title, $set_title); ?>
+
+    <div class="btn-toolbar btn-toolbar-top">
+        <div class="row">
+            <div class="btn-actions">
+                <?php echo DwHtml::button("administracion/ccostos/agregar/", 'agregar', NULL, 'fa-check-square-o', APP_AJAX); ?>
+                <?php echo DwHtml::button("administracion/ccostos/listar/", 'listar', NULL, 'fa-check', APP_AJAX); ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-overflow">
+
+        <table class="table table-bordered table-hover table-striped table-condensed table-responsive">
+            <thead>
+                <tr>
+                    <th data-order="id">ID</th>
+                    <th data-search="codigo" data-order="codigo">CODIGO</th>
+                    <th data-search="nombre" data-order="nombre">NOMBRE</th>
+                    <th data-order="activo">ESTADO</th>
+                    <th class="btn-actions col-blocked text-center">ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($ccostos->items as $ccostos): ?>                    
+                    <?php $key_shw = Security::setKey($ccostos->id, 'shw_ccostos'); ?>
+                    <?php $key_ina = Security::setKey($ccostos->id, 'bloquear_ccostos'); ?>
+                    <?php $key_rea = Security::setKey($ccostos->id, 'reactivar_ccostos'); ?>                
+                    <tr>
+                        <td><?php echo ($field=='id') ? DwUtils::resaltar($value, $ccostos->id) : $ccostos->id; ?></td>
+                        <td><?php echo ($field=='codigo') ? DwUtils::resaltar($value, $ccostos->codigo) : $ccostos->codigo; ?></td>
+                        <td><?php echo ($field=='nombre') ? DwUtils::resaltar($value, $ccostos->nombre) : $ccostos->nombre; ?></td>
+                        
+                        <td><?php echo ($ccostos->activo == CCostos::ACTIVO) ? '<span class="label label-success" title="'.$ccostos->nombre.'" rel="tooltip">Activa</span>' : '<span class="label label-danger" title="'.$ccostos->nombre.'" rel="tooltip">Bloqueada</span>'; ; ?></td>
+                        <td>
+                            <?php #echo DwHtml::buttonTable('Ver usuario', "sistema/usuarios/ver/$key_shw/", NULL, 'info', 'fa-search'); ?>
+                            <?php #if($usuario->estado_usuario == EstadoUsuario::ACTIVO) { ?>
+                                <?php #echo DwHtml::buttonTable('Bloquear usuario', "sistema/usuarios/estado/bloquear/$key_ina/", NULL, 'success', 'fa-flag'); ?>
+                            <?php #} else { ?>
+                                <?php #echo DwHtml::buttonTable('Reactivar usuario', "sistema/usuarios/estado/reactivar/$key_rea/", NULL, 'danger', 'fa-flag'); ?>
+                            <?php #} ?>
+                            -- agregar acciones --
+                        </td>
+                    </tr>
+                    
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+    </div>
+
+    <?php View::partial('paginators/default', false, array('page'=>$ccostos, 'url'=>"administracion/ccostos/buscar/$field/$value/$order/")); ?>
+
+</div>

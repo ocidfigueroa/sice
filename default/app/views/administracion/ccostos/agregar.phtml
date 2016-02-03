@@ -1,0 +1,36 @@
+<?php View::flash(); ?>
+
+<div class="container shell-view">
+
+    <?php View::process($page_module, $page_title, $set_title); ?>
+
+    <?php echo DwForm::open(); ?>
+
+        <div class="row">
+            <div class="col-md-4">
+                <?php echo DwForm::text('ccostos.nombre', array('class'=>'input-lower input-required'), NULL, 'Descripción'); ?>
+            </div>
+            <div class="col-md-4">
+                <?php echo DwForm::text('ccostos.codigo', array('class'=>'input-lower input-required'), NULL, 'Código'); ?>
+            </div>
+       	</div>     
+        
+        <div class="row">
+        	<div class="col-md-4">
+                <?php echo DwForm::select('ccostos.activo', array(CCostos::ACTIVO => 'Activo', CCostos::INACTIVO => 'Bloqueado'), array('class'=>'input-lower input-required'), NULL, 'Estado'); ?>
+
+            </div>
+            
+        </div>
+    
+        <div class="row">
+            <div class="form-actions">
+                <?php echo DwForm::send('Guardar ccostos'); ?>
+                <?php echo DwForm::cancel(); ?>
+                <?php echo DwForm::focus('ccostos.nombre'); ?>
+            </div>
+        </div>
+
+    <?php echo DwForm::close(); ?>
+
+</div>
